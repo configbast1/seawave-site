@@ -76,3 +76,31 @@ python manage.py runserver
 | ![Про компанію](screenshots/15-about-block-super.jpg) | ![Контакти](screenshots/16-contacts-footer.jpg) |
 | **Історія: дати (`for`, `forloop.last`)** | |
 | ![Дати](screenshots/17-history-dates-loop.jpg) | |
+
+## ДЗ: власна адмінка (додаток `panel`)
+
+Кастомна адмінка «Моя компанія» за адресою **`/panel/`** — одна сторінка з CRUD для двох пов'язаних таблиць БД:
+
+- [`panel/models.py`](panel/models.py) — `Department` (відділ: назва, місто, рік створення, бюджет) і `Employee` (працівник: ім'я, посада, відділ `ForeignKey(..., on_delete=CASCADE, related_name='employees')`, зарплата, рік прийому, телефон, віддалено);
+- [`panel/views.py`](panel/views.py) — один view `index` обробляє POST-дії `create_*`, `update_*`, `delete_*` для обох моделей через `ModelForm` (з валідацією, без 500 на кривих даних), повідомлення через `messages`, доступ лише для staff (`staff_member_required`);
+- [`panel/templates/panel/admin.html`](panel/templates/panel/admin.html) — статистика, форми додавання, таблиці з пошуком, редагування в модальних вікнах (Esc / клік по фону закриває), підтвердження видалення;
+- [`panel/migrations/0002_seed_data.py`](panel/migrations/0002_seed_data.py) — початкові дані (5 відділів, 10 працівників);
+- моделі також зареєстровані у стандартній адмінці Django (`/admin/`), відділ показує своїх працівників inline;
+- [`panel/tests.py`](panel/tests.py) — 7 тестів: доступ, CRUD, каскадне видалення, невалідні дані.
+
+```
+python manage.py migrate
+python manage.py createsuperuser
+python manage.py runserver
+python manage.py test panel
+```
+
+Відкрити http://127.0.0.1:8000/panel/ (вхід — обліковим записом staff/superuser).
+
+| Власна адмінка | Редагування в модальному вікні |
+|---|---|
+| ![Адмінка](screenshots/18-custom-admin.png) | ![Модальне вікно](screenshots/19-custom-admin-edit-modal.png) |
+| **Django admin: відділи** | **Django admin: працівники** |
+| ![Відділи](screenshots/20-django-admin-departments.png) | ![Працівники](screenshots/21-django-admin-employees.png) |
+| **Таблиці БД `panel_department` і `panel_employee`** | |
+| ![Таблиці БД](screenshots/22-db-tables.png) | |

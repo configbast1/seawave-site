@@ -13,6 +13,7 @@ INSTALLED_APPS = [
     'core', # !!!
     'branches', # !!!
     'history',
+    'panel',  # кастомна адмінка
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',

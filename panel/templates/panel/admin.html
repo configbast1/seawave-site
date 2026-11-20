@@ -1,0 +1,321 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="uk">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="google" content="notranslate">
+    <title>{{ title }} | SeaWave Software</title>
+    <style>
+        :root {
+            --navy: #0b1d3a;
+            --navy2: #12294f;
+            --blue: #1565c0;
+            --sky: #29b6f6;
+            --sand: #ffca6b;
+            --bg: #eef3fa;
+            --text: #1f2a3c;
+            --muted: #607089;
+            --card: #ffffff;
+            --line: #dbe4f0;
+            --ok: #2e7d32;
+            --err: #c62828;
+            --radius: 14px;
+        }
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: 'Segoe UI', Roboto, Arial, sans-serif; background: var(--bg); color: var(--text); }
+
+        header {
+            background: linear-gradient(120deg, var(--navy) 0%, var(--blue) 60%, var(--sky) 100%);
+            color: #fff; box-shadow: 0 4px 20px rgba(11, 29, 58, .3);
+        }
+        .top { max-width: 1240px; margin: 0 auto; padding: 14px 24px; display: flex; align-items: center; justify-content: space-between; gap: 12px; flex-wrap: wrap; }
+        .logo { display: flex; align-items: center; color: #fff; text-decoration: none; font-weight: 800; font-size: 1.3rem; }
+        .logo img { width: 36px; height: 36px; margin-right: 10px; }
+        .logo span { color: var(--sand); }
+        .logo small { margin-left: 10px; font-weight: 600; font-size: .8rem; background: rgba(255,255,255,.18); padding: 3px 10px; border-radius: 20px; }
+        .top nav a { color: rgba(255,255,255,.9); text-decoration: none; margin-left: 14px; font-size: .92rem; }
+        .top nav a:hover { color: var(--sand); }
+
+        main { max-width: 1240px; margin: 0 auto; padding: 26px 24px 50px; }
+
+        .stats { display: grid; grid-template-columns: repeat(4, 1fr); gap: 16px; margin-bottom: 22px; }
+        .stat { background: var(--card); border-radius: var(--radius); padding: 18px 20px; box-shadow: 0 2px 10px rgba(11,29,58,.06); border-left: 5px solid var(--sky); }
+        .stat:nth-child(2) { border-color: var(--blue); }
+        .stat:nth-child(3) { border-color: var(--sand); }
+        .stat:nth-child(4) { border-color: var(--navy); }
+        .stat b { display: block; font-size: 1.8rem; color: var(--navy); }
+        .stat span { color: var(--muted); font-size: .88rem; }
+
+        .msg { padding: 12px 16px; border-radius: 10px; margin-bottom: 12px; font-weight: 600; }
+        .msg.success { background: #e7f5e9; color: var(--ok); border: 1px solid #b9dfbe; }
+        .msg.error { background: #fdecec; color: var(--err); border: 1px solid #f3c0c0; }
+
+        .grid2 { display: grid; grid-template-columns: 1fr 1fr; gap: 18px; margin-bottom: 22px; }
+        .box { background: var(--card); border-radius: var(--radius); padding: 20px; box-shadow: 0 2px 10px rgba(11,29,58,.06); }
+        .box h2 { font-size: 1.1rem; color: var(--navy); margin-bottom: 14px; display: flex; align-items: center; justify-content: space-between; gap: 10px; }
+        .box h2 .count { margin-left: 6px; vertical-align: middle; font-size: .8rem; background: var(--bg); color: var(--blue); padding: 3px 10px; border-radius: 20px; }
+
+        .form-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+        .form-grid .wide { grid-column: 1 / -1; }
+        label { font-size: .8rem; color: var(--muted); font-weight: 600; display: block; margin-bottom: 3px; }
+        input, select { width: 100%; padding: 9px 11px; border: 1px solid var(--line); border-radius: 8px; font: inherit; font-size: .93rem; background: #fbfdff; }
+        input:focus, select:focus { outline: 2px solid var(--sky); border-color: transparent; }
+        .check { display: flex; align-items: center; gap: 8px; margin-top: 20px; }
+        .check input { width: auto; }
+        .check label { margin: 0; }
+
+        .btn { border: 0; border-radius: 8px; padding: 9px 16px; font: inherit; font-weight: 700; cursor: pointer; font-size: .9rem; }
+        .btn-main { background: var(--blue); color: #fff; margin-top: 12px; width: 100%; }
+        .btn-main:hover { background: var(--navy2); }
+        .btn-main:disabled { background: #9fb3cc; cursor: not-allowed; }
+        .btn-edit { background: #e3f2fd; color: var(--blue); padding: 6px 11px; }
+        .btn-del { background: #fdecec; color: var(--err); padding: 6px 11px; }
+        .btn-edit:hover { background: #cde6fb; }
+        .btn-del:hover { background: #f8d4d4; }
+        .hint { color: var(--muted); font-size: .85rem; margin-top: 8px; }
+
+        .search { max-width: 260px; }
+        table { width: 100%; border-collapse: collapse; font-size: .92rem; }
+        th { text-align: left; color: var(--muted); font-size: .78rem; text-transform: uppercase; letter-spacing: .4px; padding: 10px; border-bottom: 2px solid var(--line); }
+        td { padding: 10px; border-bottom: 1px solid var(--line); vertical-align: middle; }
+        tr:hover td { background: #f6f9fd; }
+        td.num { font-variant-numeric: tabular-nums; }
+        td.actions { white-space: nowrap; text-align: right; }
+        td.actions form { display: inline; }
+        .tag { display: inline-block; background: var(--bg); color: var(--blue); padding: 2px 9px; border-radius: 20px; font-size: .8rem; font-weight: 600; }
+        .tag.remote { background: #fff4dc; color: #a86b00; }
+        .empty { color: var(--muted); text-align: center; padding: 22px; }
+        .tables { display: grid; gap: 22px; }
+
+        .backdrop { display: none; position: fixed; inset: 0; background: rgba(11,29,58,.55); z-index: 50; align-items: center; justify-content: center; padding: 20px; }
+        .backdrop.open { display: flex; }
+        .modal { background: var(--card); border-radius: var(--radius); padding: 22px; width: 100%; max-width: 520px; box-shadow: 0 20px 50px rgba(0,0,0,.3); }
+        .modal h3 { color: var(--navy); margin-bottom: 14px; }
+        .modal .row { display: flex; gap: 10px; margin-top: 14px; }
+        .modal .row .btn { flex: 1; margin: 0; }
+        .btn-ghost { background: var(--bg); color: var(--text); }
+
+        @media (max-width: 900px) { .stats { grid-template-columns: 1fr 1fr; } .grid2 { grid-template-columns: 1fr; } }
+    </style>
+</head>
+<body>
+<header>
+    <div class="top">
+        <a class="logo" href="{% url 'panel' %}"><img src="{% static 'img/logo.svg' %}" alt="">Sea<span>Wave</span><small>Адмінка</small></a>
+        <nav>
+            <a href="{% url 'home' %}">← На сайт</a>
+            <a href="{% url 'admin:index' %}">Django admin</a>
+            <a href="{% url 'admin:logout' %}" onclick="event.preventDefault(); document.getElementById('logout').submit();">Вийти ({{ user.username }})</a>
+        </nav>
+        <form id="logout" method="post" action="{% url 'admin:logout' %}" hidden>{% csrf_token %}</form>
+    </div>
+</header>
+
+<main>
+    <section class="stats">
+        <div class="stat"><b>{{ departments|length }}</b><span>відділів</span></div>
+        <div class="stat"><b>{{ employees|length }}</b><span>працівників</span></div>
+        <div class="stat"><b>${{ total_salary|floatformat:0 }}</b><span>фонд зарплати / міс.</span></div>
+        <div class="stat"><b>{{ city_choices|length }}</b><span>офіси: Одеса, Лондон, Париж, Відень</span></div>
+    </section>
+
+    {% for message in messages %}
+        <div class="msg {{ message.tags }}">{{ message }}</div>
+    {% endfor %}
+
+    <section class="grid2">
+        <div class="box">
+            <h2>➕ Новий відділ</h2>
+            <form method="post">
+                {% csrf_token %}
+                <input type="hidden" name="action" value="create_department">
+                <div class="form-grid">
+                    <div class="wide"><label>Назва</label><input name="name" required maxlength="100" placeholder="Напр. Відділ мобільної розробки"></div>
+                    <div><label>Місто</label>
+                        <select name="city">{% for value, text in city_choices %}<option value="{{ value }}">{{ text }}</option>{% endfor %}</select>
+                    </div>
+                    <div><label>Рік створення</label><input name="founded_year" type="number" min="2008" max="2100" value="2026" required></div>
+                    <div class="wide"><label>Бюджет, $</label><input name="budget" type="number" min="0" step="0.01" required placeholder="50000"></div>
+                </div>
+                <button class="btn btn-main">Додати відділ</button>
+            </form>
+        </div>
+
+        <div class="box">
+            <h2>➕ Новий працівник</h2>
+            <form method="post">
+                {% csrf_token %}
+                <input type="hidden" name="action" value="create_employee">
+                <div class="form-grid">
+                    <div><label>Ім'я та прізвище</label><input name="full_name" required maxlength="120"></div>
+                    <div><label>Посада</label><input name="position" required maxlength="100"></div>
+                    <div><label>Відділ</label>
+                        <select name="department" required>{% for d in departments %}<option value="{{ d.id }}">{{ d.name }}</option>{% endfor %}</select>
+                    </div>
+                    <div><label>Зарплата, $</label><input name="salary" type="number" min="0" step="0.01" required></div>
+                    <div><label>Рік прийому</label><input name="hire_year" type="number" min="2008" max="2100" value="2026" required></div>
+                    <div><label>Телефон</label><input name="phone" maxlength="20" placeholder="380671112233"></div>
+                    <div class="wide check"><input type="checkbox" name="is_remote" id="new_remote"><label for="new_remote">Працює віддалено</label></div>
+                </div>
+                <button class="btn btn-main" {% if not departments %}disabled{% endif %}>Додати працівника</button>
+                {% if not departments %}<p class="hint">Спочатку створіть хоча б один відділ.</p>{% endif %}
+            </form>
+        </div>
+    </section>
+
+    <section class="tables">
+        <div class="box">
+            <h2><span>🏢 Відділи <span class="count">{{ departments|length }}</span></span>
+                <input class="search" id="dep-search" placeholder="Пошук відділу…"></h2>
+            <table id="dep-table">
+                <thead><tr><th>ID</th><th>Назва</th><th>Місто</th><th>Рік</th><th>Бюджет, $</th><th>Працівників</th><th></th></tr></thead>
+                <tbody>
+                {% for d in departments %}
+                    <tr>
+                        <td>{{ d.id }}</td>
+                        <td><b>{{ d.name }}</b></td>
+                        <td><span class="tag">{{ d.city }}</span></td>
+                        <td>{{ d.founded_year }}</td>
+                        <td class="num">{{ d.budget|floatformat:2 }}</td>
+                        <td>{{ d.emp_count }}</td>
+                        <td class="actions">
+                            <button type="button" class="btn btn-edit" data-edit="department"
+                                    data-id="{{ d.id }}" data-name="{{ d.name }}" data-city="{{ d.city }}"
+                                    data-founded_year="{{ d.founded_year }}" data-budget="{{ d.budget|stringformat:'s' }}">✏️ Змінити</button>
+                            <form method="post" onsubmit="return confirm('Видалити відділ «{{ d.name|escapejs }}»? Усі його працівники ({{ d.emp_count }}) теж будуть видалені!');">
+                                {% csrf_token %}
+                                <input type="hidden" name="action" value="delete_department">
+                                <input type="hidden" name="id" value="{{ d.id }}">
+                                <button class="btn btn-del">🗑</button>
+                            </form>
+                        </td>
+                    </tr>
+                {% empty %}
+                    <tr><td colspan="7" class="empty">Відділів ще немає</td></tr>
+                {% endfor %}
+                </tbody>
+            </table>
+        </div>
+
+        <div class="box">
+            <h2><span>👥 Працівники <span class="count">{{ employees|length }}</span></span>
+                <input class="search" id="emp-search" placeholder="Пошук працівника…"></h2>
+            <table id="emp-table">
+                <thead><tr><th>ID</th><th>Ім'я</th><th>Посада</th><th>Відділ</th><th>Зарплата, $</th><th>Рік</th><th>Телефон</th><th>Формат</th><th></th></tr></thead>
+                <tbody>
+                {% for e in employees %}
+                    <tr>
+                        <td>{{ e.id }}</td>
+                        <td><b>{{ e.full_name }}</b></td>
+                        <td>{{ e.position }}</td>
+                        <td>{{ e.department.name }}</td>
+                        <td class="num">{{ e.salary|floatformat:2 }}</td>
+                        <td>{{ e.hire_year }}</td>
+                        <td>{{ e.phone|default:"—" }}</td>
+                        <td>{% if e.is_remote %}<span class="tag remote">віддалено</span>{% else %}<span class="tag">офіс</span>{% endif %}</td>
+                        <td class="actions">
+                            <button type="button" class="btn btn-edit" data-edit="employee"
+                                    data-id="{{ e.id }}" data-full_name="{{ e.full_name }}" data-position="{{ e.position }}"
+                                    data-department="{{ e.department_id }}" data-salary="{{ e.salary|stringformat:'s' }}"
+                                    data-hire_year="{{ e.hire_year }}" data-phone="{{ e.phone }}"
+                                    data-is_remote="{{ e.is_remote|yesno:'1,' }}">✏️ Змінити</button>
+                            <form method="post" onsubmit="return confirm('Видалити працівника «{{ e.full_name|escapejs }}»?');">
+                                {% csrf_token %}
+                                <input type="hidden" name="action" value="delete_employee">
+                                <input type="hidden" name="id" value="{{ e.id }}">
+                                <button class="btn btn-del">🗑</button>
+                            </form>
+                        </td>
+                    </tr>
+                {% empty %}
+                    <tr><td colspan="9" class="empty">Працівників ще немає</td></tr>
+                {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </section>
+</main>
+
+<!-- модальне вікно: редагування відділу -->
+<div class="backdrop" id="modal-department">
+    <div class="modal">
+        <h3>✏️ Редагування відділу</h3>
+        <form method="post">
+            {% csrf_token %}
+            <input type="hidden" name="action" value="update_department">
+            <input type="hidden" name="id">
+            <div class="form-grid">
+                <div class="wide"><label>Назва</label><input name="name" required maxlength="100"></div>
+                <div><label>Місто</label>
+                    <select name="city">{% for value, text in city_choices %}<option value="{{ value }}">{{ text }}</option>{% endfor %}</select>
+                </div>
+                <div><label>Рік створення</label><input name="founded_year" type="number" min="2008" max="2100" required></div>
+                <div class="wide"><label>Бюджет, $</label><input name="budget" type="number" min="0" step="0.01" required></div>
+            </div>
+            <div class="row"><button type="button" class="btn btn-ghost" onclick="closeModals()">Скасувати</button><button class="btn btn-main">Зберегти</button></div>
+        </form>
+    </div>
+</div>
+
+<!-- модальне вікно: редагування працівника -->
+<div class="backdrop" id="modal-employee">
+    <div class="modal">
+        <h3>✏️ Редагування працівника</h3>
+        <form method="post">
+            {% csrf_token %}
+            <input type="hidden" name="action" value="update_employee">
+            <input type="hidden" name="id">
+            <div class="form-grid">
+                <div><label>Ім'я та прізвище</label><input name="full_name" required maxlength="120"></div>
+                <div><label>Посада</label><input name="position" required maxlength="100"></div>
+                <div><label>Відділ</label>
+                    <select name="department" required>{% for d in departments %}<option value="{{ d.id }}">{{ d.name }}</option>{% endfor %}</select>
+                </div>
+                <div><label>Зарплата, $</label><input name="salary" type="number" min="0" step="0.01" required></div>
+                <div><label>Рік прийому</label><input name="hire_year" type="number" min="2008" max="2100" required></div>
+                <div><label>Телефон</label><input name="phone" maxlength="20"></div>
+                <div class="wide check"><input type="checkbox" name="is_remote" id="edit_remote"><label for="edit_remote">Працює віддалено</label></div>
+            </div>
+            <div class="row"><button type="button" class="btn btn-ghost" onclick="closeModals()">Скасувати</button><button class="btn btn-main">Зберегти</button></div>
+        </form>
+    </div>
+</div>
+
+<script>
+    // відкриття модального вікна: значення беремо з data-атрибутів кнопки
+    function openEditModal(btn) {
+        const modal = document.getElementById('modal-' + btn.dataset.edit);
+        const form = modal.querySelector('form');
+        for (const [key, value] of Object.entries(btn.dataset)) {
+            const field = form.elements[key];
+            if (!field || key === 'edit') continue;
+            if (field.type === 'checkbox') field.checked = value === '1';
+            else field.value = value;
+        }
+        modal.classList.add('open');
+        form.querySelector('input:not([type=hidden])').focus();
+    }
+
+    function closeModals() {
+        document.querySelectorAll('.backdrop.open').forEach(m => m.classList.remove('open'));
+    }
+
+    document.querySelectorAll('[data-edit]').forEach(btn => btn.addEventListener('click', () => openEditModal(btn)));
+    document.querySelectorAll('.backdrop').forEach(b => b.addEventListener('click', e => { if (e.target === b) closeModals(); }));
+    document.addEventListener('keydown', e => { if (e.key === 'Escape') closeModals(); });
+
+    // пошук по таблиці на клієнті
+    function setupTableFilter(inputId, tableId) {
+        const input = document.getElementById(inputId);
+        const rows = document.querySelectorAll('#' + tableId + ' tbody tr');
+        input.addEventListener('input', () => {
+            const q = input.value.trim().toLowerCase();
+            rows.forEach(r => r.style.display = r.textContent.toLowerCase().includes(q) ? '' : 'none');
+        });
+    }
+    setupTableFilter('dep-search', 'dep-table');
+    setupTableFilter('emp-search', 'emp-table');
+</script>
+</body>
+</html>
